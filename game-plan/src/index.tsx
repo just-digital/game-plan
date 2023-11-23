@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { createBrowserRouter, Route } from 'react-router-dom';
 import { loadStripe } from "@stripe/stripe-js";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -32,6 +32,7 @@ root.render(
     >
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        const Router = createBrowserRouter();
         <Router>
           <Route exact path="/">
             <GamePlan />
