@@ -1,49 +1,51 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, Route } from 'react-router-dom';
-import { loadStripe } from "@stripe/stripe-js";
-import { Auth0Provider } from "@auth0/auth0-react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from '@mui/material/CssBaseline';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import reportWebVitals from "./reportWebVitals";
 
 import GamePlan from "./components/GamePlan";
-
-import '@fontsource/roboto/300.css';
-
-
-const stripePromise = loadStripe("your-stripe-public-key");
+import Landing from "./components/Landing";
+import Badminton from "./components/badminton/Badminton";
+import ErrorPage from "./components/ErrorPage";
+import { AuthenticationRequired } from "./components/AuthenticationRequired";
 
 const theme = createTheme();
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <GamePlan />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <Landing />,
+      },
+      {
+        path: "badminton/:contactId",
+        element: <AuthenticationRequired component={Badminton} />,
+      },
+    ],
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="nblue.au.auth0.com"
-      clientId="Cur59D1RmfKtJf3jFo4I7Hx7xFgO1Uwz"
-      authorizationParams={{
-        redirect_uri: window.location.origin,
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        const Router = createBrowserRouter();
-        <Router>
-          <Route exact path="/">
-            <GamePlan />
-          </Route>
-        </Router>
-      </ThemeProvider>
-    </Auth0Provider>
+    <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+//reportWebVitals();
